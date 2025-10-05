@@ -1,5 +1,6 @@
 package com.example.undergraduateresearch
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,16 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
             imageView.setImageResource(news.imageRes)
             textCategory.text = news.category
             textTitle.text = news.title
+
+            // Adicionar clique no item
+            itemView.setOnClickListener {
+                val intent = Intent(itemView.context, NewsDetailActivity::class.java).apply {
+                    putExtra(NewsDetailActivity.EXTRA_TITLE, news.title)
+                    putExtra(NewsDetailActivity.EXTRA_CATEGORY, news.category)
+                    putExtra(NewsDetailActivity.EXTRA_IMAGE, news.imageRes)
+                }
+                itemView.context.startActivity(intent)
+            }
         }
     }
 }

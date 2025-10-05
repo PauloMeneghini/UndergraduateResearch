@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header com imagem -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
+
+            <!-- Imagem da notícia -->
+            <ImageView
+                android:id="@+id/imageNews"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="#E0E0E0" />
+
+            <!-- Overlay escuro -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_overlay" />
+
+            <!-- Barra superior com ícones -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <!-- Botão voltar -->
+                <ImageView
+                    android:id="@+id/imageBack"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:background="@drawable/circle_background"
+                    android:padding="6dp"
+                    android:contentDescription="Back"
+                    app:tint="#FFFFFF" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Ícone de busca -->
+                <ImageView
+                    android:id="@+id/imageSearch"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_search"
+                    android:background="@drawable/circle_background"
+                    android:padding="6dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Search"
+                    app:tint="#FFFFFF" />
+
+                <!-- Ícone de favorito -->
+                <ImageView
+                    android:id="@+id/imageFavorite"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_favorite"
+                    android:background="@drawable/circle_background"
+                    android:padding="6dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Favorite"
+                    app:tint="#FF69B4" />
+
+                <!-- Ícone de menu -->
+                <ImageView
+                    android:id="@+id/imageMenu"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_menu"
+                    android:background="@drawable/circle_background"
+                    android:padding="6dp"
+                    android:contentDescription="Menu"
+                    app:tint="#FFFFFF" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <!-- Conteúdo da notícia -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Perfil do autor -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/imageAuthorAvatar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/breastfeeding_amico"
+                    android:background="@drawable/circle_background" />
+
+                <TextView
+                    android:id="@+id/textAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Samuel Newton"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Categoria -->
+            <TextView
+                android:id="@+id/textCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TECHNOLOGY"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To build responsibly, tech needs to do more than just hire chief ethics officers"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Data -->
+            <TextView
+                android:id="@+id/textDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17 June 2023 — 4:49 PM"
+                android:textColor="#999999"
+                android:textSize="13sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Conteúdo -->
+            <TextView
+                android:id="@+id/textContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="In the last couple of years, we've seen new teams in tech companies emerge that focus on responsible innovation, digital wellbeing, and ethical tech use."
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:lineSpacingExtra="6dp" />
+
+            <!-- Ações -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="32dp"
+                android:padding="16dp"
+                android:background="#F5F5F5">
+
+                <ImageView
+                    android:id="@+id/imageComment"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_comment"
+                    android:contentDescription="Comment"
+                    app:tint="#666666" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/imageBookmark"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_bookmark"
+                    android:layout_marginEnd="24dp"
+                    android:contentDescription="Bookmark"
+                    app:tint="#666666" />
+
+                <ImageView
+                    android:id="@+id/imageShare"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_share"
+                    android:contentDescription="Share"
+                    app:tint="#666666" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
