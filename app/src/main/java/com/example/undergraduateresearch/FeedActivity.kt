@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.Runnable
 import kotlin.math.abs
+import androidx.recyclerview.widget.LinearLayoutManager
 
 class FeedActivity : AppCompatActivity() {
 
@@ -20,6 +21,8 @@ class FeedActivity : AppCompatActivity() {
     private lateinit var handler: Handler
     private lateinit var imageList: ArrayList<Int>
     private lateinit var adapter: ImageAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var newsAdapter: NewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +36,8 @@ class FeedActivity : AppCompatActivity() {
 
         init()
         setupTransformer()
+        setupRecyclerView()
+        loadNews()
 
         viewPager2.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -61,6 +66,7 @@ class FeedActivity : AppCompatActivity() {
         imageList = ArrayList()
 
         imageList.add(R.drawable.sample_story_background)
+        imageList.add(R.drawable.mask)
 
         adapter = ImageAdapter(imageList, viewPager2)
 
@@ -85,5 +91,43 @@ class FeedActivity : AppCompatActivity() {
 
     private val runnable = Runnable {
         viewPager2.currentItem = viewPager2.currentItem + 1
+    }
+
+    private fun setupRecyclerView() {
+        recyclerView = findViewById(R.id.recyclerViewNews)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        newsAdapter = NewsAdapter()
+        recyclerView.adapter = newsAdapter
+    }
+
+    private fun loadNews() {
+        val newsList = listOf(
+            NewsItem(
+                id = 1,
+                category = "TECHNOLOGY",
+                title = "Insurtech startup PasarPolis gets \$54 million — Series B",
+                imageRes = R.drawable.breastfeeding_amico
+            ),
+            NewsItem(
+                id = 2,
+                category = "TECHNOLOGY",
+                title = "The IPO parade continues as Wish files, Bumble targets",
+                imageRes = R.drawable.breastfeeding_amico
+            ),
+            NewsItem(
+                id = 3,
+                category = "TECHNOLOGY",
+                title = "Hypatos gets \$11.8M for a deep learning approach",
+                imageRes = R.drawable.breastfeeding_amico
+            ),
+            NewsItem(
+                id = 4,
+                category = "TECHNOLOGY",
+                title = "Insurtech startup PasarPolis gets \$54 million — Series B",
+                imageRes = R.drawable.breastfeeding_amico
+            ),
+
+        )
+        newsAdapter.submitList(newsList)
     }
 }
