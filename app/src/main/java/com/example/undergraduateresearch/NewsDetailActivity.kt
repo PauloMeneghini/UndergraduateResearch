@@ -7,13 +7,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 
 class NewsDetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_TITLE = "extra_title"
         const val EXTRA_CATEGORY = "extra_category"
-        const val EXTRA_IMAGE = "extra_image"
+        const val EXTRA_IMAGE_URL = "extra_image_url"
         const val EXTRA_AUTHOR = "extra_author"
         const val EXTRA_DATE = "extra_date"
         const val EXTRA_CONTENT = "extra_content"
@@ -29,25 +30,48 @@ class NewsDetailActivity : AppCompatActivity() {
             insets
         }
 
-        // Receber dados da notícia
         val title = intent.getStringExtra(EXTRA_TITLE)
         val category = intent.getStringExtra(EXTRA_CATEGORY)
-        val imageRes = intent.getIntExtra(EXTRA_IMAGE, 0)
-        val author = intent.getStringExtra(EXTRA_AUTHOR) ?: "Samuel Newton"
-        val date = intent.getStringExtra(EXTRA_DATE) ?: "17 June 2023 — 4:49 PM"
+        val imageUrl = intent.getStringExtra(EXTRA_IMAGE_URL)
+        val author = intent.getStringExtra(EXTRA_AUTHOR)
+        val publishedAt = intent.getStringExtra(EXTRA_DATE)
         val content = intent.getStringExtra(EXTRA_CONTENT) ?: getDefaultContent()
+
+        val formattedDate = formatDate(publishedAt)
 
         // Configurar views
         findViewById<ImageView>(R.id.imageBack).setOnClickListener {
             finish()
         }
 
-        findViewById<ImageView>(R.id.imageNews).setImageResource(imageRes)
+        // Carregar imagem usando Glide
+        Glide.with(this)
+            .load(imageUrl)
+            .into(findViewById(R.id.imageNews))
+            
         findViewById<TextView>(R.id.textCategory).text = category
         findViewById<TextView>(R.id.textTitle).text = title
         findViewById<TextView>(R.id.textAuthor).text = author
-        findViewById<TextView>(R.id.textDate).text = date
+        findViewById<TextView>(R.id.textDate).text = formattedDate
         findViewById<TextView>(R.id.textContent).text = content
+    }
+    
+    private fun formatDate(dateString: String?): String {
+        if (dateString.isNullOrBlank()) {
+            return "Data não disponível"
+        }
+        
+        return try {
+            val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.getDefault())
+            inputFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
+            
+            val date = inputFormat.parse(dateString)
+
+            val outputFormat = java.text.SimpleDateFormat("dd 'de' MMMM 'de' yyyy — HH:mm", java.util.Locale("pt", "BR"))
+            outputFormat.format(date ?: return "Data não disponível")
+        } catch (e: Exception) {
+            "Data não disponível"
+        }
     }
 
     private fun getDefaultContent(): String {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ViewPager2 Peek Effect -->
+    <dimen name="pageMargin">16dp</dimen>
+    <dimen name="offset">32dp</dimen>
+</resources>

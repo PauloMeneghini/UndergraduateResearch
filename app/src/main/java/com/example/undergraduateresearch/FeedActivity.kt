@@ -1,96 +1,79 @@
+// FeedActivity.kt
+
 package com.example.undergraduateresearch
 
+
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.activity.enableEdgeToEdge
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.Runnable
-import kotlin.math.abs
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FeedActivity : AppCompatActivity() {
-
-    private lateinit var viewPager2: ViewPager2
-    private lateinit var handler: Handler
-    private lateinit var imageList: ArrayList<Int>
-    private lateinit var adapter: ImageAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var newsAdapter: NewsAdapter
+    private lateinit var viewPager2: ViewPager2
+    private lateinit var carouselAdapter: NewsCarouselAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContentView(R.layout.activity_feed)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
-        init()
-        setupTransformer()
+        setupViewPager()
         setupRecyclerView()
-        loadNews()
+        fetchNewsFromApi()
 
-        viewPager2.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                handler.removeCallbacks(runnable)
-                handler.postDelayed(runnable, 2000)
+    }
+
+    private fun setupViewPager() {
+        viewPager2 = findViewById(R.id.viewPager2)
+        carouselAdapter = NewsCarouselAdapter()
+        viewPager2.adapter = carouselAdapter
+
+        viewPager2.offscreenPageLimit = 1
+
+        val pageMarginPx = resources.getDimensionPixelOffset(R.dimen.pageMargin)
+        val offsetPx = resources.getDimensionPixelOffset(R.dimen.offset)
+
+        viewPager2.setPageTransformer { page, position ->
+            val offset = position * -(2 * offsetPx + pageMarginPx)
+            if (viewPager2.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
+                page.translationX = offset
+            } else {
+                page.translationY = offset
             }
-        })
-    }
 
-    override fun onPause() {
-        super.onPause()
-
-        handler.removeCallbacks(runnable)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        handler.postDelayed(runnable, 2000)
-    }
-
-    private fun init() {
-        viewPager2 = findViewById<ViewPager2>(R.id.viewPager2)
-        handler = Handler(Looper.myLooper()!!)
-        imageList = ArrayList()
-
-        imageList.add(R.drawable.sample_story_background)
-        imageList.add(R.drawable.mask)
-
-        adapter = ImageAdapter(imageList, viewPager2)
-
-        viewPager2.adapter = adapter
-        viewPager2.offscreenPageLimit = 3
-        viewPager2.clipToPadding = false
-        viewPager2.clipChildren = false
-        viewPager2.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-    }
-
-    private fun setupTransformer() {
-        val transformer = CompositePageTransformer()
-        transformer.addTransformer(MarginPageTransformer(40))
-        transformer.addTransformer { page, position ->
-            val r = 1 - abs(position)
-            page.scaleY = 0.85f + r * 0.14f
+            page.apply {
+                val scaleFactor = 0.85f
+                val alphaFactor = 0.3f
+                when {
+                    position < -1 || position > 1 -> {
+                        alpha = 0f
+                        scaleY = scaleFactor
+                        translationZ = -1f
+                    }
+                    position <= 0 -> {
+                        // Card da esquerda
+                        alpha = 1 + position * (1 - alphaFactor)
+                        scaleY = scaleFactor + (1 - scaleFactor) * (1 + position)
+                        translationZ = -Math.abs(position)
+                    }
+                    position <= 1 -> {
+                        // Card da direita
+                        alpha = 1 - position * (1 - alphaFactor)
+                        scaleY = scaleFactor + (1 - scaleFactor) * (1 - position)
+                        translationZ = -Math.abs(position)
+                    }
+                }
+            }
         }
-
-        viewPager2.setPageTransformer(transformer)
-
-    }
-
-    private val runnable = Runnable {
-        viewPager2.currentItem = viewPager2.currentItem + 1
     }
 
     private fun setupRecyclerView() {
@@ -99,35 +82,43 @@ class FeedActivity : AppCompatActivity() {
         newsAdapter = NewsAdapter()
         recyclerView.adapter = newsAdapter
     }
+    private fun fetchNewsFromApi() {
+        Log.d("FeedActivity", "Iniciando busca de notícias da API...")
 
-    private fun loadNews() {
-        val newsList = listOf(
-            NewsItem(
-                id = 1,
-                category = "TECHNOLOGY",
-                title = "Insurtech startup PasarPolis gets \$54 million — Series B",
-                imageRes = R.drawable.breastfeeding_amico
-            ),
-            NewsItem(
-                id = 2,
-                category = "TECHNOLOGY",
-                title = "The IPO parade continues as Wish files, Bumble targets",
-                imageRes = R.drawable.breastfeeding_amico
-            ),
-            NewsItem(
-                id = 3,
-                category = "TECHNOLOGY",
-                title = "Hypatos gets \$11.8M for a deep learning approach",
-                imageRes = R.drawable.breastfeeding_amico
-            ),
-            NewsItem(
-                id = 4,
-                category = "TECHNOLOGY",
-                title = "Insurtech startup PasarPolis gets \$54 million — Series B",
-                imageRes = R.drawable.breastfeeding_amico
-            ),
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    RetrofitInstance.api.getTopHeadlines(category = "aleitamento")
+                }
 
-        )
-        newsAdapter.submitList(newsList)
+                if (response.isSuccessful && response.body() != null) {
+                    val articles = response.body()!!.articles
+
+                    Log.d("FeedActivity", "API retornou ${articles.size} artigos")
+
+                    if (articles.isNotEmpty()) {
+                        Log.d("FeedActivity", "Primeiro artigo: ${articles[0].title}")
+
+                        val carouselArticles = articles.take(5)
+                        carouselAdapter.submitList(carouselArticles)
+                        Log.d("FeedActivity", "Carrossel atualizado com ${carouselArticles.size} artigos")
+
+                        newsAdapter.submitList(articles)
+                        Log.d("FeedActivity", "RecyclerView atualizado com sucesso")
+                    } else {
+                        Log.w("FeedActivity", "Lista de artigos está vazia")
+                        Toast.makeText(this@FeedActivity, "Nenhuma notícia encontrada", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    val errorMsg = "Erro ao buscar notícias: ${response.code()} - ${response.message()}"
+                    Log.e("FeedActivity", errorMsg)
+                    Toast.makeText(this@FeedActivity, "Erro ao carregar notícias", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                val errorMsg = "Exceção ao buscar notícias: ${e.message}"
+                Log.e("FeedActivity", errorMsg, e)
+                Toast.makeText(this@FeedActivity, "Erro de conexão: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

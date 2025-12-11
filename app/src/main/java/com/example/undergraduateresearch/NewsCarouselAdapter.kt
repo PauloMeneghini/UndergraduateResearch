@@ -9,38 +9,39 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
-    private var newsList: List<Article> = emptyList()
+class NewsCarouselAdapter : RecyclerView.Adapter<NewsCarouselAdapter.CarouselViewHolder>() {
+    private var articleList: List<Article> = emptyList()
 
     fun submitList(list: List<Article>) {
-        newsList = list
+        articleList = list
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_news, parent, false)
-        return NewsViewHolder(view)
+            .inflate(R.layout.item_story_card, parent, false)
+        return CarouselViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        holder.bind(newsList[position])
+    override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
+        holder.bind(articleList[position])
     }
 
-    override fun getItemCount(): Int = newsList.size
+    override fun getItemCount(): Int = articleList.size
 
-    class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val imageView: ImageView = itemView.findViewById(R.id.imageNews)
-        private val textCategory: TextView = itemView.findViewById(R.id.textCategory)
-        private val textTitle: TextView = itemView.findViewById(R.id.textTitle)
+    class CarouselViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val imageStory: ImageView = itemView.findViewById(R.id.imageStory)
+        private val textStoryTitle: TextView = itemView.findViewById(R.id.textStoryTitle)
+        private val iconPlay: ImageView = itemView.findViewById(R.id.iconPlay)
 
         fun bind(article: Article) {
             Glide.with(itemView.context)
                 .load(article.urlToImage)
-                .into(imageView)
+                .placeholder(R.drawable.sample_story_background)
+                .error(R.drawable.sample_story_background)
+                .into(imageStory)
 
-            textCategory.text = article.source.name
-            textTitle.text = article.title
+            textStoryTitle.text = article.title
 
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, NewsDetailActivity::class.java).apply {
