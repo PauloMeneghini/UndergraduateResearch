@@ -2,6 +2,7 @@ package com.example.undergraduateresearch
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             val passwordText = password.text.toString().trim()
 
             if(validateInputs(emailText, passwordText, email, password)) {
-                performLogin(emailText, passwordText)
+                executarLogin(emailText, passwordText)
             }
         }
     }
@@ -81,6 +84,49 @@ class MainActivity : AppCompatActivity() {
             finish()
         } else {
             Toast.makeText(this, "Email ou senha incorretos", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun executarLogin(email: String, pass: String) {
+        lifecycleScope.launch {
+            try {
+                val requisicao = LoginRequest(email = email, senha = pass)
+
+                val response = RetrofitClient.api.fazerLogin(requisicao)
+
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+
+                    if (loginResponse != null) {
+                        // --- SUCESSO ---
+
+                        // 1. Pegar o Token (O passaporte para as próximas requisições)
+                        val token = loginResponse.accessToken
+
+                        // 2. Pegar os dados da usuária
+                        val idMae = loginResponse.dadosUsuario.idUserMae
+
+                        Log.d("LOGIN_OK", "Token: $token")
+                        Toast.makeText(applicationContext, "Bem-vinda, mãe ID $idMae!", Toast.LENGTH_LONG).show()
+
+                        val intent = Intent(applicationContext, FeedActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(applicationContext,  "Erro no login", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    val codigoErro = response.code()
+                    val corpoErro = response.errorBody()?.string()
+
+                    Log.e("ERRO_API", "Código: $codigoErro")
+                    Log.e("ERRO_API", "Detalhe: $corpoErro")
+
+                    Toast.makeText(applicationContext, "Erro: $codigoErro", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(applicationContext, "Sem conexão com a internet", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
