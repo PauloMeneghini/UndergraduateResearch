@@ -98,12 +98,12 @@ class MainActivity : AppCompatActivity() {
                     val loginResponse = response.body()
 
                     if (loginResponse != null) {
-                        // --- SUCESSO ---
 
-                        // 1. Pegar o Token (O passaporte para as próximas requisições)
                         val token = loginResponse.accessToken
 
-                        // 2. Pegar os dados da usuária
+                        val tokenManager = TokenManager(applicationContext)
+                        tokenManager.salvarToken(token)
+
                         val idMae = loginResponse.dadosUsuario.idUserMae
 
                         Log.d("LOGIN_OK", "Token: $token")

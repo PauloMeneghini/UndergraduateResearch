@@ -55,5 +55,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     // Retrofit para chamadas de rede
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Para converter JSON
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }
