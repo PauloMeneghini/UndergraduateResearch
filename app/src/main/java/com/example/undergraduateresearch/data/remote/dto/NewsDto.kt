@@ -1,16 +1,21 @@
-// NewsResponse.kt
-package com.example.undergraduateresearch
+package com.example.undergraduateresearch.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class NewsApiResponse(
+/**
+ * DTO para resposta da API de notícias.
+ */
+data class NewsApiResponseDto(
     @SerializedName("articles")
-    val articles: List<Article>
+    val articles: List<ArticleDto>
 )
 
-data class Article(
+/**
+ * DTO para artigo de notícia.
+ */
+data class ArticleDto(
     @SerializedName("title")
-    val title: String,
+    val title: String?,
 
     @SerializedName("description")
     val description: String?,
@@ -19,25 +24,28 @@ data class Article(
     val urlToImage: String?,
 
     @SerializedName("url")
-    val url: String,
+    val url: String?,
 
     @SerializedName("content")
     val content: String?,
 
     @SerializedName("source")
-    val source: Source,
+    val source: SourceDto?,
 
     @SerializedName("author")
-    val author: String,
+    val author: String?,
     
     @SerializedName("publishedAt")
     val publishedAt: String?
 )
 
-data class Source(
+/**
+ * DTO para fonte da notícia.
+ */
+data class SourceDto(
     @SerializedName("id")
     val id: String?,
 
     @SerializedName("name")
-    val name: String
+    val name: String?
 )

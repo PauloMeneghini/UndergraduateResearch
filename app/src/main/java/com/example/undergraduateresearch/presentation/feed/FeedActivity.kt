@@ -1,21 +1,28 @@
-// FeedActivity.kt
-
-package com.example.undergraduateresearch
-
+package com.example.undergraduateresearch.presentation.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.Dispatchers
+import com.example.undergraduateresearch.R
+import com.example.undergraduateresearch.UndergraduateResearchApplication
+import com.example.undergraduateresearch.presentation.ViewModelFactory
+import com.example.undergraduateresearch.presentation.feed.adapter.NewsAdapter
+import com.example.undergraduateresearch.presentation.feed.adapter.NewsCarouselAdapter
+import com.example.undergraduateresearch.util.Resource
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FeedActivity : AppCompatActivity() {
+    
+    private val viewModel: FeedViewModel by viewModels {
+        val appContainer = (application as UndergraduateResearchApplication).appContainer
+        ViewModelFactory { FeedViewModel(appContainer.getTopHeadlinesUseCase) }
+    }
+    
     private lateinit var recyclerView: RecyclerView
     private lateinit var newsAdapter: NewsAdapter
     private lateinit var viewPager2: ViewPager2
@@ -23,13 +30,11 @@ class FeedActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_feed)
 
         setupViewPager()
         setupRecyclerView()
-        fetchNewsFromApi()
-
+        setupObservers()
     }
 
     private fun setupViewPager() {
@@ -82,43 +87,37 @@ class FeedActivity : AppCompatActivity() {
         newsAdapter = NewsAdapter()
         recyclerView.adapter = newsAdapter
     }
-    private fun fetchNewsFromApi() {
-        Log.d("FeedActivity", "Iniciando busca de notícias da API...")
-
-        lifecycleScope.launch(Dispatchers.Main) {
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    RetrofitInstance.api.getTopHeadlines(category = "aleitamento")
-                }
-
-                if (response.isSuccessful && response.body() != null) {
-                    val articles = response.body()!!.articles
-
-                    Log.d("FeedActivity", "API retornou ${articles.size} artigos")
-
-                    if (articles.isNotEmpty()) {
-                        Log.d("FeedActivity", "Primeiro artigo: ${articles[0].title}")
-
+    
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            viewModel.newsState.collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        // Pode adicionar um indicador de loading aqui
+                    }
+                    is Resource.Success -> {
+                        val articles = resource.data!!
+                        
+                        // Atualizar carousel com os primeiros 5 artigos
                         val carouselArticles = articles.take(5)
                         carouselAdapter.submitList(carouselArticles)
-                        Log.d("FeedActivity", "Carrossel atualizado com ${carouselArticles.size} artigos")
-
+                        
+                        // Atualizar RecyclerView com todos os artigos
                         newsAdapter.submitList(articles)
-                        Log.d("FeedActivity", "RecyclerView atualizado com sucesso")
-                    } else {
-                        Log.w("FeedActivity", "Lista de artigos está vazia")
-                        Toast.makeText(this@FeedActivity, "Nenhuma notícia encontrada", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    val errorMsg = "Erro ao buscar notícias: ${response.code()} - ${response.message()}"
-                    Log.e("FeedActivity", errorMsg)
-                    Toast.makeText(this@FeedActivity, "Erro ao carregar notícias", Toast.LENGTH_SHORT).show()
+                    is Resource.Error -> {
+                        Toast.makeText(
+                            this@FeedActivity,
+                            resource.message ?: "Erro ao carregar notícias",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    null -> {
+                        // Estado inicial
+                    }
                 }
-            } catch (e: Exception) {
-                val errorMsg = "Exceção ao buscar notícias: ${e.message}"
-                Log.e("FeedActivity", errorMsg, e)
-                Toast.makeText(this@FeedActivity, "Erro de conexão: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
 }
+

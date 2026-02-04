@@ -1,4 +1,4 @@
-package com.example.undergraduateresearch
+package com.example.undergraduateresearch.data.local
 
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences

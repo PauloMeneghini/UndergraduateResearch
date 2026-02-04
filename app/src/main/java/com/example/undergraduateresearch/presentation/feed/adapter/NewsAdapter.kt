@@ -1,4 +1,4 @@
-package com.example.undergraduateresearch
+package com.example.undergraduateresearch.presentation.feed.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,6 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.undergraduateresearch.NewsDetailActivity
+import com.example.undergraduateresearch.R
+import com.example.undergraduateresearch.domain.model.Article
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     private var newsList: List<Article> = emptyList()
@@ -39,13 +42,13 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
                 .load(article.urlToImage)
                 .into(imageView)
 
-            textCategory.text = article.source.name
+            textCategory.text = article.sourceName
             textTitle.text = article.title
 
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, NewsDetailActivity::class.java).apply {
                     putExtra(NewsDetailActivity.EXTRA_TITLE, article.title)
-                    putExtra(NewsDetailActivity.EXTRA_CATEGORY, article.source.name)
+                    putExtra(NewsDetailActivity.EXTRA_CATEGORY, article.sourceName)
                     putExtra(NewsDetailActivity.EXTRA_IMAGE_URL, article.urlToImage)
                     putExtra(NewsDetailActivity.EXTRA_AUTHOR, article.author)
                     putExtra(NewsDetailActivity.EXTRA_DATE, article.publishedAt)
