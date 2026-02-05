@@ -19,7 +19,7 @@ class LoginUseCase(
     /**
      * Executa o login.
      * @param email Email do usuário
-     * @param password Senha do usuário
+     * @param password User password
      * @return Resource contendo LoginResult em caso de sucesso
      */
     suspend operator fun invoke(email: String, password: String): Resource<LoginResult> {

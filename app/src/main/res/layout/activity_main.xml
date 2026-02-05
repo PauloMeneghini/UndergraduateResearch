@@ -60,13 +60,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Campo de Senha -->
+            <!-- Password Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txt_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="Senha"
+                android:hint="Password"
                 app:endIconMode="password_toggle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -80,7 +80,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Link "Esqueceu a senha?" -->
+            <!-- "Forgot password?" Link -->
             <TextView
                 android:id="@+id/tv_forgot_password"
                 android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                 android:focusable="true"
                 android:fontFamily="@font/poppins"
                 android:padding="8dp"
-                android:text="Esqueceu a senha?"
+                android:text="Forgot password?"
                 android:textSize="14sp" />
 
             <!-- Botão de Login -->

@@ -32,7 +32,7 @@ class LoginViewModel(
     fun login(email: String, password: String) {
         Log.d(TAG, "=== INICIANDO LOGIN ===")
         Log.d(TAG, "Email: $email")
-        Log.d(TAG, "Senha: ${if (password.isNotEmpty()) "***${password.length} caracteres***" else "vazia"}")
+        Log.d(TAG, "Password: ${if (password.isNotEmpty()) "***${password.length} characters***" else "empty"}")
         
         viewModelScope.launch {
             Log.d(TAG, "Definindo estado como Loading...")
@@ -76,7 +76,7 @@ class LoginViewModel(
     fun validateInputs(email: String, password: String): String? {
         Log.d(TAG, "--- Validando inputs ---")
         Log.d(TAG, "Email fornecido: $email")
-        Log.d(TAG, "Senha fornecida: ${password.length} caracteres")
+        Log.d(TAG, "Password provided: ${password.length} characters")
         
         if (email.isEmpty()) {
             Log.w(TAG, "⚠️ Validação falhou: Email vazio")
@@ -89,13 +89,13 @@ class LoginViewModel(
         }
         
         if (password.isEmpty()) {
-            Log.w(TAG, "⚠️ Validação falhou: Senha vazia")
-            return "Senha obrigatória"
+            Log.w(TAG, "⚠️ Validation failed: Empty password")
+            return "Password is required"
         }
         
         if (password.length < 6) {
-            Log.w(TAG, "⚠️ Validação falhou: Senha muito curta (${password.length} caracteres)")
-            return "Senha deve ter no mínimo 6 caracteres"
+            Log.w(TAG, "⚠️ Validation failed: Password too short (${password.length} characters)")
+            return "Password must have at least 6 characters"
         }
         
         Log.d(TAG, "✅ Validação passou!")

@@ -27,7 +27,7 @@ class AuthRepositoryImpl(
         Log.d(TAG, "Preparando requisição de login...")
         
         return try {
-            val request = LoginRequestDto(email = email, senha = password)
+            val request = LoginRequestDto(email = email, password = password)
             Log.d(TAG, "Request DTO criado: email=$email")
             
             Log.d(TAG, "Fazendo chamada à API...")

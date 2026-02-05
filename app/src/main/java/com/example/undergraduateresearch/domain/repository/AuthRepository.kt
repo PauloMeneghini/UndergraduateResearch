@@ -12,7 +12,7 @@ interface AuthRepository {
     /**
      * Realiza login do usuário.
      * @param email Email do usuário
-     * @param password Senha do usuário
+     * @param password User password
      * @return Resource contendo LoginResult em caso de sucesso
      */
     suspend fun login(email: String, password: String): Resource<LoginResult>

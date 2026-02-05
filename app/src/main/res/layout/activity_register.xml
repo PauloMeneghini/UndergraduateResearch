@@ -50,13 +50,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Campo de Senha -->
+            <!-- Password Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txt_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="Senha"
+                android:hint="Password"
                 app:endIconMode="password_toggle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -70,13 +70,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Campo de confirmar Senha -->
+            <!-- Confirm Password Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txt_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="Confirme a senha"
+                android:hint="Confirm password"
                 app:endIconMode="password_toggle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 

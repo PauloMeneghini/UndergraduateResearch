@@ -137,7 +137,7 @@ class LoginActivity : AppCompatActivity() {
             
             Log.d(TAG, "Input do usuário:")
             Log.d(TAG, "  - Email: $email")
-            Log.d(TAG, "  - Senha: ${password.length} caracteres")
+            Log.d(TAG, "  - Password: ${password.length} characters")
             
             Log.d(TAG, "Validando inputs...")
             val validationError = viewModel.validateInputs(email, password)

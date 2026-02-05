@@ -9,8 +9,8 @@ data class LoginRequestDto(
     @SerializedName("email")
     val email: String,
     
-    @SerializedName("senha")
-    val senha: String
+    @SerializedName("password")
+    val password: String
 )
 
 /**
