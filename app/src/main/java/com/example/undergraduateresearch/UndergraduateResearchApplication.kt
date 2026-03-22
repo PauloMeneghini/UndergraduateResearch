@@ -14,5 +14,8 @@ class UndergraduateResearchApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         appContainer = AppContainer(this)
+        
+        // Initialize notification channel
+        com.example.undergraduateresearch.util.NotificationHelper.createNotificationChannel(this)
     }
 }

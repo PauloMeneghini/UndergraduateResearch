@@ -20,6 +20,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Notification Button -->
+    <ImageButton
+        android:id="@+id/notificationButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Notificações"
+        android:src="@android:drawable/ic_popup_reminder"
+        android:tint="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- NestedScrollView com todo o conteúdo scrollável -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -33,9 +46,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
-            <!-- Você pode adicionar outros elementos aqui -->
-            <!-- Por exemplo, um banner, texto, etc -->
 
             <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView

@@ -30,7 +30,12 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels {
         Log.d(TAG, "Criando LoginViewModel...")
         val appContainer = (application as UndergraduateResearchApplication).appContainer
-        ViewModelFactory { LoginViewModel(appContainer.loginUseCase) }
+        ViewModelFactory(
+            appContainer.loginUseCase,
+            appContainer.getTopHeadlinesUseCase,
+            appContainer.getNotificationsUseCase,
+            appContainer.markNotificationAsReadUseCase
+        )
     }
     
     private lateinit var emailInput: TextInputEditText

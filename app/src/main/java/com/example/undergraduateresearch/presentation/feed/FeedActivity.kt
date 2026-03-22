@@ -1,6 +1,8 @@
 package com.example.undergraduateresearch.presentation.feed
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +15,8 @@ import com.example.undergraduateresearch.UndergraduateResearchApplication
 import com.example.undergraduateresearch.presentation.ViewModelFactory
 import com.example.undergraduateresearch.presentation.feed.adapter.NewsAdapter
 import com.example.undergraduateresearch.presentation.feed.adapter.NewsCarouselAdapter
+import com.example.undergraduateresearch.presentation.notification.NotificationActivity
+import com.example.undergraduateresearch.util.NotificationHelper
 import com.example.undergraduateresearch.util.Resource
 import kotlinx.coroutines.launch
 
@@ -20,7 +24,12 @@ class FeedActivity : AppCompatActivity() {
     
     private val viewModel: FeedViewModel by viewModels {
         val appContainer = (application as UndergraduateResearchApplication).appContainer
-        ViewModelFactory { FeedViewModel(appContainer.getTopHeadlinesUseCase) }
+        ViewModelFactory(
+            appContainer.loginUseCase,
+            appContainer.getTopHeadlinesUseCase,
+            appContainer.getNotificationsUseCase,
+            appContainer.markNotificationAsReadUseCase
+        )
     }
     
     private lateinit var recyclerView: RecyclerView
@@ -32,9 +41,30 @@ class FeedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
 
+        // Request notification permission for Android 13+
+        NotificationHelper.requestNotificationPermission(this)
+
+        // 🧪 TESTE: Mostrar notificação de boas-vindas
+        // TODO: Remover este código após testar
+        NotificationHelper.showNotification(
+            context = this,
+            notificationId = 100,
+            title = "Bem-vinda ao Feed! 🎉",
+            message = "Sistema de notificações funcionando perfeitamente!"
+        )
+
+        setupNotificationButton()
         setupViewPager()
         setupRecyclerView()
         setupObservers()
+    }
+
+    private fun setupNotificationButton() {
+        val notificationButton = findViewById<ImageButton>(R.id.notificationButton)
+        notificationButton?.setOnClickListener {
+            val intent = Intent(this, NotificationActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupViewPager() {

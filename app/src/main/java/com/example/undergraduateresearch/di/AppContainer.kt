@@ -101,4 +101,23 @@ class AppContainer(private val context: Context) {
     val getTopHeadlinesUseCase: GetTopHeadlinesUseCase by lazy {
         GetTopHeadlinesUseCase(newsRepository)
     }
+    
+    // Notification API Service
+    private val notificationApiService: com.example.undergraduateresearch.data.remote.api.NotificationApi by lazy {
+        authRetrofit.create(com.example.undergraduateresearch.data.remote.api.NotificationApi::class.java)
+    }
+    
+    // Notification Repository
+    val notificationRepository: com.example.undergraduateresearch.domain.repository.NotificationRepository by lazy {
+        com.example.undergraduateresearch.data.repository.NotificationRepositoryImpl(notificationApiService)
+    }
+    
+    // Notification Use Cases
+    val getNotificationsUseCase: com.example.undergraduateresearch.domain.usecase.GetNotificationsUseCase by lazy {
+        com.example.undergraduateresearch.domain.usecase.GetNotificationsUseCase(notificationRepository)
+    }
+    
+    val markNotificationAsReadUseCase: com.example.undergraduateresearch.domain.usecase.MarkNotificationAsReadUseCase by lazy {
+        com.example.undergraduateresearch.domain.usecase.MarkNotificationAsReadUseCase(notificationRepository)
+    }
 }

@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    // TODO: Descomentar quando configurar Firebase
+    // id("com.google.gms.google-services")
 }
 
 android {
@@ -76,6 +78,13 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+    // Firebase Cloud Messaging
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-messaging-ktx")
+
+    // WorkManager para notificações agendadas
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 
     // Testing
     testImplementation(libs.junit)
