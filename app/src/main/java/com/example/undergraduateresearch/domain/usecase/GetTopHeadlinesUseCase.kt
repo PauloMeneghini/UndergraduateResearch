@@ -13,10 +13,9 @@ class GetTopHeadlinesUseCase(
 ) {
     /**
      * Executa a busca de notícias.
-     * @param category Categoria das notícias
      * @return Resource contendo lista de artigos em caso de sucesso
      */
-    suspend operator fun invoke(category: String): Resource<List<Article>> {
-        return newsRepository.getTopHeadlines(category)
+    suspend operator fun invoke(): Resource<List<Article>> {
+        return newsRepository.getTopHeadlines()
     }
 }

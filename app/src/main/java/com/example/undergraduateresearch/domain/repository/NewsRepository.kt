@@ -10,9 +10,8 @@ import com.example.undergraduateresearch.util.Resource
 interface NewsRepository {
     
     /**
-     * Busca as principais notícias de uma categoria.
-     * @param category Categoria das notícias
+     * Busca as principais notícias (Feed).
      * @return Resource contendo lista de artigos em caso de sucesso
      */
-    suspend fun getTopHeadlines(category: String): Resource<List<Article>>
+    suspend fun getTopHeadlines(): Resource<List<Article>>
 }

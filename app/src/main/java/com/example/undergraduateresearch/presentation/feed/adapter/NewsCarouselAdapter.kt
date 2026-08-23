@@ -39,21 +39,20 @@ class NewsCarouselAdapter : RecyclerView.Adapter<NewsCarouselAdapter.CarouselVie
 
         fun bind(article: Article) {
             Glide.with(itemView.context)
-                .load(article.urlToImage)
+                .load(R.drawable.sample_story_background) // Imagem provisória
                 .placeholder(R.drawable.sample_story_background)
                 .error(R.drawable.sample_story_background)
                 .into(imageStory)
 
-            textStoryTitle.text = article.title
+            textStoryTitle.text = article.title ?: "Sem Título"
 
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, NewsDetailActivity::class.java).apply {
                     putExtra(NewsDetailActivity.EXTRA_TITLE, article.title)
-                    putExtra(NewsDetailActivity.EXTRA_CATEGORY, article.sourceName)
-                    putExtra(NewsDetailActivity.EXTRA_IMAGE_URL, article.urlToImage)
+                    putExtra(NewsDetailActivity.EXTRA_CATEGORY, article.category)
                     putExtra(NewsDetailActivity.EXTRA_AUTHOR, article.author)
                     putExtra(NewsDetailActivity.EXTRA_DATE, article.publishedAt)
-                    putExtra(NewsDetailActivity.EXTRA_CONTENT, article.content)
+                    putExtra(NewsDetailActivity.EXTRA_CONTENT, article.contentPreview)
                 }
                 itemView.context.startActivity(intent)
             }

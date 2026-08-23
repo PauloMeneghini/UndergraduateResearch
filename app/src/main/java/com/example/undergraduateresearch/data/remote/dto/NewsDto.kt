@@ -1,51 +1,57 @@
 package com.example.undergraduateresearch.data.remote.dto
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 /**
- * DTO para resposta da API de notícias.
+ * DTO para o item do Feed de Notícias.
  */
-data class NewsApiResponseDto(
-    @SerializedName("articles")
-    val articles: List<ArticleDto>
-)
-
-/**
- * DTO para artigo de notícia.
- */
-data class ArticleDto(
-    @SerializedName("title")
-    val title: String?,
-
-    @SerializedName("description")
-    val description: String?,
-
-    @SerializedName("urlToImage")
-    val urlToImage: String?,
-
-    @SerializedName("url")
-    val url: String?,
-
-    @SerializedName("content")
-    val content: String?,
-
-    @SerializedName("source")
-    val source: SourceDto?,
-
-    @SerializedName("author")
-    val author: String?,
-    
-    @SerializedName("publishedAt")
-    val publishedAt: String?
-)
-
-/**
- * DTO para fonte da notícia.
- */
-data class SourceDto(
+data class FeedItemDto(
     @SerializedName("id")
-    val id: String?,
+    val id: String,
 
-    @SerializedName("name")
-    val name: String?
+    @SerializedName("titulo")
+    val titulo: String?,
+
+    @SerializedName("categoria")
+    val categoria: String?,
+
+    @SerializedName("status")
+    val status: String?,
+
+    @SerializedName("blocos")
+    val blocos: JsonElement?, // Pode ser lido como um JSON genérico
+
+    @SerializedName("semanaApresentacao")
+    val semanaApresentacao: Int?,
+
+    @SerializedName("fase")
+    val fase: String?,
+
+    @SerializedName("nivelRisco")
+    val nivelRisco: String?,
+
+    @SerializedName("link")
+    val link: String?,
+
+    @SerializedName("referenciaMaterial")
+    val referenciaMaterial: String?,
+
+    @SerializedName("tipo")
+    val tipo: String?,
+
+    @SerializedName("condicaoEnvio")
+    val condicaoEnvio: String?,
+
+    @SerializedName("autorId")
+    val autorId: String?,
+
+    @SerializedName("autorEmail")
+    val autorEmail: String?,
+
+    @SerializedName("criadoEm")
+    val criadoEm: String?,
+
+    @SerializedName("atualizadoEm")
+    val atualizadoEm: String?
 )

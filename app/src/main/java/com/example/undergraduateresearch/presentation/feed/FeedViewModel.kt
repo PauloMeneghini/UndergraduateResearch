@@ -30,10 +30,10 @@ class FeedViewModel(
     /**
      * Carrega as principais notícias.
      */
-    fun loadNews(category: String = Constants.NEWS_CATEGORY_DEFAULT) {
+    fun loadNews() {
         viewModelScope.launch {
             _newsState.value = Resource.Loading()
-            _newsState.value = getTopHeadlinesUseCase(category)
+            _newsState.value = getTopHeadlinesUseCase()
         }
     }
     

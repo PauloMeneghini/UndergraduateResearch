@@ -8,7 +8,7 @@ import com.example.undergraduateresearch.util.Resource
 
 /**
  * Implementação do repositório de notícias.
- * Gerencia operações de busca de notícias.
+ * Gerencia operações de busca de notícias do Feed.
  */
 class NewsRepositoryImpl(
     private val newsApiService: NewsApiService
@@ -18,13 +18,12 @@ class NewsRepositoryImpl(
         private const val TAG = "NewsRepositoryImpl"
     }
     
-    override suspend fun getTopHeadlines(category: String): Resource<List<Article>> {
+    override suspend fun getTopHeadlines(): Resource<List<Article>> {
         Log.d(TAG, "--- NewsRepository.getTopHeadlines() ---")
-        Log.d(TAG, "Categoria: $category")
         
         return try {
-            Log.d(TAG, "Fazendo chamada à API de notícias...")
-            val response = newsApiService.getTopHeadlines(category)
+            Log.d(TAG, "Fazendo chamada à API de feed...")
+            val response = newsApiService.getTopHeadlines()
             
             Log.d(TAG, "Resposta recebida!")
             Log.d(TAG, "Status Code: ${response.code()}")
@@ -32,25 +31,26 @@ class NewsRepositoryImpl(
             Log.d(TAG, "Has Body: ${response.body() != null}")
             
             if (response.isSuccessful && response.body() != null) {
-                val articlesDto = response.body()!!.articles
+                val articlesDto = response.body()!!
                 Log.d(TAG, "✅ ${articlesDto.size} notícias recebidas")
                 
                 // Mapear DTOs para modelos de domínio e filtrar artigos inválidos
                 val articles = articlesDto.mapNotNull { dto ->
-                    // Filtrar artigos sem título ou URL (dados essenciais)
-                    if (dto.title.isNullOrBlank() || dto.url.isNullOrBlank()) {
-                        Log.w(TAG, "⚠️ Artigo ignorado - título ou URL nulo")
+                    if (dto.titulo.isNullOrBlank()) {
+                        Log.w(TAG, "⚠️ Artigo ignorado - título nulo")
                         null
                     } else {
+                        // Extrair texto limpo dos blocos JSON
+                        val preview = extractTextFromBlocks(dto.blocos)
+                        
                         Article(
-                            title = dto.title,
-                            description = dto.description,
-                            urlToImage = dto.urlToImage,
-                            url = dto.url,
-                            content = dto.content,
-                            sourceName = dto.source?.name ?: "Fonte desconhecida",
-                            author = dto.author,
-                            publishedAt = dto.publishedAt
+                            id = dto.id,
+                            title = dto.titulo,
+                            category = dto.categoria,
+                            contentPreview = preview,
+                            author = dto.autorEmail,
+                            publishedAt = dto.criadoEm,
+                            link = dto.link
                         )
                     }
                 }
@@ -58,7 +58,7 @@ class NewsRepositoryImpl(
                 Log.d(TAG, "Notícias válidas após filtragem: ${articles.size}")
                 Resource.Success(articles)
             } else {
-                val errorMsg = "Erro ao buscar notícias: ${response.code()}"
+                val errorMsg = "Erro ao buscar feed: ${response.code()}"
                 Log.e(TAG, "❌ $errorMsg")
                 
                 // Tentar ler corpo de erro
@@ -79,5 +79,42 @@ class NewsRepositoryImpl(
             Log.e(TAG, "Stack trace:", e)
             Resource.Error(errorMsg)
         }
+    }
+    
+    private fun extractTextFromBlocks(blocksElement: com.google.gson.JsonElement?): String {
+        if (blocksElement == null || !blocksElement.isJsonArray) return "Sem conteúdo"
+        
+        val stringBuilder = java.lang.StringBuilder()
+        try {
+            val blocksArray = blocksElement.asJsonArray
+            for (block in blocksArray) {
+                if (!block.isJsonObject) continue
+                val blockObj = block.asJsonObject
+                
+                val type = blockObj.get("type")?.asString
+                if (type == "paragraph" || type == "heading") {
+                    val contentArray = blockObj.get("content")?.asJsonArray
+                    if (contentArray != null) {
+                        for (contentItem in contentArray) {
+                            if (!contentItem.isJsonObject) continue
+                            val contentObj = contentItem.asJsonObject
+                            if (contentObj.get("type")?.asString == "text") {
+                                val text = contentObj.get("text")?.asString
+                                if (!text.isNullOrEmpty()) {
+                                    stringBuilder.append(text)
+                                }
+                            }
+                        }
+                        stringBuilder.append("\n\n")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Erro ao extrair texto do JSON: ${e.message}")
+            return blocksElement.toString().take(150) + "..."
+        }
+        
+        val result = stringBuilder.toString().trim()
+        return if (result.isEmpty()) "Conteúdo indisponível" else result
     }
 }

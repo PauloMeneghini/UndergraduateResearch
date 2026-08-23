@@ -6,11 +6,7 @@ package com.example.undergraduateresearch.util
 object Constants {
     
     // URLs de API
-    const val BASE_URL_AUTH = "http://192.168.0.208:3000/"
-    const val BASE_URL_NEWS = "https://newsapi.org/v2/"
-    
-    // API Keys
-    const val NEWS_API_KEY = "2dc6c43129fc40fe9f5f95f431bdbaef"  // Substitua pela sua chave da NewsAPI
+    const val BASE_URL_AUTH = "http://10.0.2.2:3000/"
     
     // SharedPreferences
     const val PREFS_NAME = "secure_prefs"

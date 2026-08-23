@@ -29,21 +29,18 @@ class AppContainer(private val context: Context) {
         TokenManager(context)
     }
     
-    // News API Interceptor para adicionar API Key
-    private val newsApiInterceptor = Interceptor { chain ->
+    // Auth Interceptor para adicionar Token JWT
+    private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
-        val originalUrl = originalRequest.url
         
-        // Adicionar apiKey como query parameter
-        val urlWithApiKey = originalUrl.newBuilder()
-            .addQueryParameter("apiKey", Constants.NEWS_API_KEY)
-            .build()
+        val token = tokenManager.lerToken()
+        val requestBuilder = originalRequest.newBuilder()
         
-        val requestWithApiKey = originalRequest.newBuilder()
-            .url(urlWithApiKey)
-            .build()
+        if (!token.isNullOrEmpty()) {
+            requestBuilder.header("Authorization", "Bearer $token")
+        }
         
-        chain.proceed(requestWithApiKey)
+        chain.proceed(requestBuilder.build())
     }
     
     // Logging Interceptor para debug
@@ -51,10 +48,10 @@ class AppContainer(private val context: Context) {
         level = HttpLoggingInterceptor.Level.BODY
     }
     
-    // OkHttp Client para News API (com API Key)
-    private val newsOkHttpClient: OkHttpClient by lazy {
+    // OkHttp Client para APIs seguras
+    private val apiOkHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
-            .addInterceptor(newsApiInterceptor)
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
     }
@@ -69,8 +66,8 @@ class AppContainer(private val context: Context) {
     
     private val newsRetrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL_NEWS)
-            .client(newsOkHttpClient)
+            .baseUrl(Constants.BASE_URL_AUTH)
+            .client(apiOkHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
