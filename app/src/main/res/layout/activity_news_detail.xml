@@ -162,15 +162,12 @@
                 android:textSize="13sp"
                 android:layout_marginBottom="24dp" />
 
-            <!-- Conteúdo -->
-            <TextView
-                android:id="@+id/textContent"
+            <!-- Conteúdo Dinâmico (Textos e Imagens intercalados) -->
+            <LinearLayout
+                android:id="@+id/contentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="In the last couple of years, we've seen new teams in tech companies emerge that focus on responsible innovation, digital wellbeing, and ethical tech use."
-                android:textColor="#333333"
-                android:textSize="16sp"
-                android:lineSpacingExtra="6dp" />
+                android:orientation="vertical" />
 
             <!-- Ações -->
             <LinearLayout

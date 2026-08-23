@@ -10,6 +10,9 @@ data class FeedItemDto(
     @SerializedName("id")
     val id: String,
 
+    @SerializedName("imagemCapa")
+    val imagemCapa: String?,
+
     @SerializedName("titulo")
     val titulo: String?,
 

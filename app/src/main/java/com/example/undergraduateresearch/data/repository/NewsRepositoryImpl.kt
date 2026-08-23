@@ -48,6 +48,8 @@ class NewsRepositoryImpl(
                             title = dto.titulo,
                             category = dto.categoria,
                             contentPreview = preview,
+                            imageUrl = formatLocalhostUrl(dto.imagemCapa),
+                            rawBlocks = dto.blocos?.toString(),
                             author = dto.autorEmail,
                             publishedAt = dto.criadoEm,
                             link = dto.link
@@ -116,5 +118,10 @@ class NewsRepositoryImpl(
         
         val result = stringBuilder.toString().trim()
         return if (result.isEmpty()) "Conteúdo indisponível" else result
+    }
+    
+    private fun formatLocalhostUrl(url: String?): String? {
+        if (url == null) return null
+        return url.replace("http://localhost", "http://10.0.2.2")
     }
 }

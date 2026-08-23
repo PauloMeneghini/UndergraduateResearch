@@ -8,6 +8,8 @@ data class Article(
     val title: String?,
     val category: String?,
     val contentPreview: String?, // Extraído dos blocos para visualização prévia
+    val imageUrl: String?, // URL da Imagem de Capa
+    val rawBlocks: String?, // String JSON pura dos blocos (textos e imagens internas)
     val author: String?,
     val publishedAt: String?,
     val link: String?

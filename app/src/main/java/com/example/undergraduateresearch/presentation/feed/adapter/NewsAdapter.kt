@@ -39,7 +39,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
         fun bind(article: Article) {
             Glide.with(itemView.context)
-                .load(R.drawable.sample_story_background) // Imagem provisória
+                .load(article.imageUrl ?: R.drawable.sample_story_background)
                 .into(imageView)
 
             textCategory.text = article.category ?: "Sem Categoria"
@@ -51,7 +51,8 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
                     putExtra(NewsDetailActivity.EXTRA_CATEGORY, article.category)
                     putExtra(NewsDetailActivity.EXTRA_AUTHOR, article.author)
                     putExtra(NewsDetailActivity.EXTRA_DATE, article.publishedAt)
-                    putExtra(NewsDetailActivity.EXTRA_CONTENT, article.contentPreview)
+                    putExtra(NewsDetailActivity.EXTRA_IMAGE_URL, article.imageUrl)
+                    putExtra(NewsDetailActivity.EXTRA_BLOCKS, article.rawBlocks)
                 }
                 itemView.context.startActivity(intent)
             }
